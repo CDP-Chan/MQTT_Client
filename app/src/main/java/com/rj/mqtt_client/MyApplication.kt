@@ -1,0 +1,45 @@
+package com.rj.mqtt_client
+
+import android.app.Application
+import android.content.res.Configuration
+import android.os.Environment
+import android.util.Log
+import java.io.File
+import java.util.Locale
+
+class MyApplication : Application() {
+    companion object {
+        lateinit var instance: MyApplication
+            private set
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+
+        try {
+            SettingsManager.init()   // 无参数初始化
+        } catch (e: Exception) {
+            Log.e("MyApp", "SettingsManager init failed", e)
+        }
+
+        try {
+            val dir = File(Environment.getExternalStorageDirectory(), "Mqtt")
+            if (!dir.exists()) dir.mkdirs()
+        } catch (e: Exception) {
+            Log.e("MyApp", "Storage dir creation failed", e)
+        }
+
+        applySavedLanguage()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun applySavedLanguage() {
+        val lang = SettingsManager.getLanguage()
+        val locale = if (lang == "zh") Locale.SIMPLIFIED_CHINESE else Locale.ENGLISH
+        Locale.setDefault(locale)
+        val config = Configuration(resources.configuration)
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+    }
+}
