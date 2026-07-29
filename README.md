@@ -1,4 +1,4 @@
-# MQTT Client / MQTT客户端
+# Paho MQTT Client / Paho MQTT客户端
 
 > 一个免费 & 开源的 MQTT 客户端，不依赖 GooglePlay 服务。
 > 
