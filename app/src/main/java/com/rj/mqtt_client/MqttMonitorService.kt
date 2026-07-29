@@ -33,12 +33,12 @@ class MqttMonitorService : Service() {
         const val ACTION_UPDATE_HEARTBEAT = "UPDATE_HEARTBEAT"
         const val ACTION_LOCAL_NOTIFY = "LOCAL_NOTIFY"
         const val ACTION_UPDATE_KEEP_ALIVE = "UPDATE_KEEP_ALIVE"
+        const val ACTION_CONNECTION_SUCCESS = "com.rj.mqtt_client.CONNECTION_SUCCESS"
 
         @Volatile var isAppInForeground = false
         @Volatile var isAnyConnected = false
     }
 
-    // 使用线程安全的 Map 存储客户端实例
     private val clients = ConcurrentHashMap<String, MqttAsyncClient>()
     private var wakeLock: PowerManager.WakeLock? = null
     private var hasConnectedBefore = false
@@ -89,14 +89,10 @@ class MqttMonitorService : Service() {
     }
 
     private fun scheduleHeartbeat() {
-        // 取消之前的回调
         val previousRunnable = heartbeatRunnable
         previousRunnable?.let { heartbeatHandler?.removeCallbacks(it) }
         heartbeatRunnable = null
-
-        if (!SettingsManager.isHeartbeatEnabled()) {
-            return
-        }
+        if (!SettingsManager.isHeartbeatEnabled()) return
 
         val handler = heartbeatHandler ?: Handler(Looper.getMainLooper()).also { heartbeatHandler = it }
         heartbeatRunnable = object : Runnable {
@@ -105,9 +101,7 @@ class MqttMonitorService : Service() {
                     if (client.isConnected) {
                         try {
                             client.publish("heartbeat", MqttMessage("ping".toByteArray()).apply { qos = 0 })
-                        } catch (_: Exception) {
-                            // 忽略发送失败
-                        }
+                        } catch (_: Exception) {}
                     }
                 }
                 handler.postDelayed(this, 5 * 60 * 1000)
@@ -122,9 +116,7 @@ class MqttMonitorService : Service() {
             try {
                 val message = MqttMessage(payload.toByteArray()).apply { qos = 1 }
                 client.publish(topic, message)
-            } catch (e: Exception) {
-                Log.e(TAG, "Publish error", e)
-            }
+            } catch (e: Exception) { Log.e(TAG, "Publish error", e) }
         }
     }
 
@@ -138,14 +130,13 @@ class MqttMonitorService : Service() {
                     Log.d(TAG, "MQTT connected to ${config.url}")
                     try {
                         client.subscribe(config.topic, 1)
-                        Log.d(TAG, "Subscribed to ${config.topic}")
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Subscribe failed", e)
-                    }
+                    } catch (e: Exception) { Log.e(TAG, "Subscribe failed", e) }
                     clients[config.topic] = client
                     isAnyConnected = true
                     if (!hasConnectedBefore) {
                         hasConnectedBefore = true
+                        // 发送广播通知连接成功
+                        sendBroadcast(Intent(ACTION_CONNECTION_SUCCESS))
                         if (SettingsManager.isSendMessageEnabled()) {
                             updateForegroundNotification(getLocalizedString(R.string.mqtt_connected))
                         }
@@ -156,7 +147,6 @@ class MqttMonitorService : Service() {
                     if (topic != null && message != null) {
                         val payload = message.toString()
                         MessageStorage.addMessage(MessageItem(topic = config.topic, content = "[${config.name}] $payload"))
-                        Log.d(TAG, "Message arrived: ${config.topic} -> $payload")
                         if (SettingsManager.isSendMessageEnabled() && !isAppInForeground && config.notifyLockScreen) {
                             val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
                             sendNotification(time, config.name, payload)
@@ -166,7 +156,6 @@ class MqttMonitorService : Service() {
 
                 override fun connectionLost(cause: Throwable?) {
                     Log.w(TAG, "Connection lost: ${cause?.message}")
-                    // 如果某个连接丢失，检查是否还有其他连接，若没有则更新全局状态
                     if (clients.values.none { it.isConnected }) {
                         isAnyConnected = false
                     }
@@ -184,17 +173,12 @@ class MqttMonitorService : Service() {
                 }
             }
             client.connect(options)
-            Log.d(TAG, "Connecting to ${config.url}...")
-        } catch (e: Exception) {
-            Log.e(TAG, "MQTT init failed for ${config.topic}", e)
-        }
+        } catch (e: Exception) { Log.e(TAG, "MQTT init failed for ${config.topic}", e) }
     }
 
     private fun connectAllTopics() {
         val topics = SettingsManager.loadTopics()
-        Log.d(TAG, "connectAllTopics: found ${topics.size} topics")
         if (topics.isEmpty()) {
-            Log.d(TAG, "No topics to connect")
             isAnyConnected = false
             if (SettingsManager.isSendMessageEnabled()) {
                 updateForegroundNotification(getLocalizedString(R.string.mqtt_no_topics))
@@ -279,9 +263,7 @@ class MqttMonitorService : Service() {
         try {
             val file = File(Environment.getExternalStorageDirectory(), "Mqtt/debug_log.txt")
             file.appendText("$message\n")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to write log", e)
-        }
+        } catch (e: Exception) { Log.e(TAG, "Failed to write log", e) }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -290,11 +272,7 @@ class MqttMonitorService : Service() {
             applicationContext, 1, restartIntent,
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
-        (getSystemService(ALARM_SERVICE) as AlarmManager).set(
-            AlarmManager.RTC,
-            System.currentTimeMillis() + 1000,
-            pi
-        )
+        (getSystemService(ALARM_SERVICE) as AlarmManager).set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pi)
         super.onTaskRemoved(rootIntent)
     }
 

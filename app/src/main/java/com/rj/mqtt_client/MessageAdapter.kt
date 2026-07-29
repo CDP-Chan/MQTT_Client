@@ -2,11 +2,12 @@ package com.rj.mqtt_client
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rj.mqtt_client.databinding.ItemMessageBinding
 
-class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
-    private var items = listOf<MessageItem>()
+class MessageAdapter : ListAdapter<MessageItem, MessageAdapter.ViewHolder>(DiffCallback) {
 
     inner class ViewHolder(val binding: ItemMessageBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -16,15 +17,18 @@ class MessageAdapter : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val msg = items[position]
-        holder.binding.tvContent.text = msg.content
+        val msg = getItem(position)
         holder.binding.tvTime.text = msg.timestamp
+        holder.binding.tvContent.text = msg.content
     }
 
-    override fun getItemCount() = items.size
+    companion object DiffCallback : DiffUtil.ItemCallback<MessageItem>() {
+        override fun areItemsTheSame(oldItem: MessageItem, newItem: MessageItem): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    fun setMessages(newList: List<MessageItem>) {
-        items = newList
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem: MessageItem, newItem: MessageItem): Boolean {
+            return oldItem == newItem
+        }
     }
 }

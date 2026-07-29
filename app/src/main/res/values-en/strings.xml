@@ -16,9 +16,6 @@
     <string name="permission_storage_msg">Please enable \"All files access\" to save data.</string>
     <string name="go_settings">Go to Settings</string>
     <string name="later">Later</string>
-    <string name="connect_mqtt">Connect</string>
-    <string name="mqtt_connected_toast">MQTT Has Been Connected</string>
-    <string name="mqtt_connecting_toast">Connecting…</string>
     <string name="notify_reject">Notification permission denied</string>
     <string name="battery_opt_fail">Cannot request battery optimization</string>
     <string name="service_started">Monitoring service started</string>
@@ -54,7 +51,7 @@
     <string name="loading">Loading...</string>
     <string name="help">Help</string>
     <string name="quit">Quit</string>
-    <string name="help_content">This is a free and open-source MQTT client, with source code hosted on GitHub. If you are ever prompted to pay, please uninstall immediately.\n\nFAQ:\n\n1. How to add a topic?\nIn the \"Add Topic\" screen, enter the server URL (DFRobot\'s server is recommended for testing), fill in the username and password, and add the topic you want to monitor.\n\n2. What does the port 1883 mean?\n1883 is the default port for the MQTT protocol. You can change it according to the actual port your server uses.\n\n3. What does the \"Notifications\" option do?\nWhen enabled, you will continue to receive new message notifications even when the screen is off. It works best together with the \"Heartbeat\" feature.\n\n4. What is the \"Heartbeat\" feature for?\nWhen enabled, the app will periodically send keep-alive packets, which helps prevent the system from freezing background processes and improves message timeliness, but it may increase battery consumption.\n\n5. Why am I not receiving messages even when the screen is on?\nPlease go to your phone\'s Settings, turn off power-saving modes, or select \"Manual management\" in the app\'s launch settings and allow \"Background activity\".\n\n6. Why does the message icon show the Android logo?\nThis is a bug caused by system cache, please restart your phone to fix it.\n\n7. Why can\'t I receive MQTT messages?\nThis app currently only supports receiving messages via TCP and SSL protocols. Support for WS and WSS protocols is planned for future releases.\n\nOfficial contact email: CDP_Chan@126.com</string>
+    <string name="help_content">This is a free and open-source MQTT client, with source code hosted on GitHub. If you are ever prompted to pay, please uninstall immediately.\n\nFAQ:\n\n1. How to add a topic?\nIn the \"Add Topic\" screen, enter the server URL (DFRobot\'s server is recommended for testing), fill in the username and password, and add the topic you want to monitor.\n\n2. What does the port 1883 mean?\n1883 is the default port for the MQTT protocol. You can change it according to the actual port your server uses.\n\n3. What does the \"Notifications\" option do?\nWhen enabled, you will continue to receive new message notifications even when the screen is off. It works best together with the \"Heartbeat\" feature.\n\n4. What is the \"Heartbeat\" feature for?\nWhen enabled, the app will periodically send keep-alive packets, which helps prevent the system from freezing background processes and improves message timeliness, but it may increase battery consumption.\n\n5. Why am I not receiving messages even when the screen is on?\nPlease go to your phone\'s Settings, turn off power-saving modes, or select \"Manual management\" in the app\'s launch settings and allow \"Background activity\".\n\n6. Why does the message icon show the Android logo?\nThis is a bug caused by system cache, please restart your phone to fix it.\n\n7. Why can\'t I receive MQTT messages?\nThis app currently only supports receiving messages via TCP and SSL protocols. Support for WS and WSS protocols is planned for future releases.\n\n8. Why can\'t I see the topic after adding it?\nPlease try setting your system font size to standard, or adjust the font size in the app.\n\nOfficial contact email: CDP_Chan@126.com</string>
     <string name="default_topic_name">MQTT</string>
     <string name="goto_settings_failed">Cannot open settings</string>
     <string name="notification_prefix">New message</string>
@@ -67,4 +64,30 @@
     <string name="mqtt_monitoring">Monitoring</string>
     <string name="send_message_switch">Send Messages</string>
     <string name="send_message_hint">When off, all notifications (foreground and pop-up) will be disabled</string>
+    <string name="connect_mqtt">Connect</string>
+    <string name="mqtt_connected_toast">MQTT Has Been Connected</string>
+    <string name="mqtt_connecting_toast">Connecting…</string>
+
+    <!-- Settings sections -->
+    <string name="basic_settings">Basic Settings</string>
+    <string name="personalization_settings">Personalization</string>
+    <string name="system_settings">System Settings</string>
+    <string name="coming_soon">Coming soon…</string>
+
+    <!-- Font size -->
+    <string name="font_size">Font Size</string>
+    <string name="font_small">Small</string>
+    <string name="font_standard">Standard</string>
+    <string name="font_large">Large</string>
+
+    <!-- Color options -->
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+
+    <!-- Border & text color -->
+    <string name="border_color">Border Color</string>
+    <string name="text_color">Text Color</string>
+    <string name="text_color_note">White text by default cannot be changed</string>
 </resources>

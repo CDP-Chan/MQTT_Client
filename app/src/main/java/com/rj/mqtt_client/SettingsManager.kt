@@ -20,15 +20,15 @@ object SettingsManager {
                     "first_setting" to true,
                     "language" to "zh",
                     "heartbeat_enabled" to true,
-                    "send_message" to true
+                    "send_message" to true,
+                    "font_size" to "standard",
+                    "border_color" to "#39FF14",
+                    "text_color" to "#39FF14"
                 )
                 writeSettingsFile(defaultSettings)
             }
             if (!topicsFile.exists()) {
-                Log.d("SettingsManager", "topics.json not found, creating empty file")
                 topicsFile.writeText(gson.toJson(emptyList<TopicConfig>()))
-            } else {
-                Log.d("SettingsManager", "topics.json exists, size: ${topicsFile.length()} bytes")
             }
         } catch (e: Exception) {
             Log.e("SettingsManager", "File init failed: ${e.message}")
@@ -61,44 +61,44 @@ object SettingsManager {
         writeSettingsFile(map)
     }
 
-    fun getFirstSetting(): Boolean = (readSettingsFile()["first_setting"] as? Boolean) ?: true
+    fun getFirstSetting(): Boolean = readSettingsFile()["first_setting"] as? Boolean ?: true
     fun setFirstSetting(value: Boolean) = updateSettingsFile("first_setting", value)
 
-    fun getLanguage(): String = (readSettingsFile()["language"] as? String) ?: "zh"
+    fun getLanguage(): String = readSettingsFile()["language"] as? String ?: "zh"
     fun setLanguage(lang: String) = updateSettingsFile("language", lang)
 
-    fun isHeartbeatEnabled(): Boolean = (readSettingsFile()["heartbeat_enabled"] as? Boolean) ?: true
+    fun isHeartbeatEnabled(): Boolean = readSettingsFile()["heartbeat_enabled"] as? Boolean ?: true
     fun setHeartbeatEnabled(enabled: Boolean) = updateSettingsFile("heartbeat_enabled", enabled)
 
-    fun isSendMessageEnabled(): Boolean = (readSettingsFile()["send_message"] as? Boolean) ?: true
+    fun isSendMessageEnabled(): Boolean = readSettingsFile()["send_message"] as? Boolean ?: true
     fun setSendMessageEnabled(enabled: Boolean) = updateSettingsFile("send_message", enabled)
+
+    fun getFontSize(): String = readSettingsFile()["font_size"] as? String ?: "standard"
+    fun setFontSize(size: String) = updateSettingsFile("font_size", size)
+
+    fun getBorderColor(): String = readSettingsFile()["border_color"] as? String ?: "#39FF14"
+    fun setBorderColor(color: String) = updateSettingsFile("border_color", color)
+
+    fun getTextColor(): String = readSettingsFile()["text_color"] as? String ?: "#39FF14"
+    fun setTextColor(color: String) = updateSettingsFile("text_color", color)
 
     fun saveTopics(topics: List<TopicConfig>) {
         try {
             topicsFile.writeText(gson.toJson(topics))
-            Log.d("SettingsManager", "Topics saved, count: ${topics.size}")
         } catch (e: Exception) {
             Log.e("SettingsManager", "Save topics failed", e)
         }
     }
 
     fun loadTopics(): List<TopicConfig> {
-        if (!topicsFile.exists()) {
-            Log.w("SettingsManager", "topics.json does not exist")
-            return emptyList()
-        }
+        if (!topicsFile.exists()) return emptyList()
         return try {
             val json = topicsFile.readText()
-            if (json.isBlank()) {
-                Log.w("SettingsManager", "topics.json is empty")
-                return emptyList()
-            }
             val type = object : TypeToken<List<TopicConfig>>() {}.type
             val list: List<TopicConfig>? = gson.fromJson(json, type)
-            Log.d("SettingsManager", "Loaded ${list?.size ?: 0} topics")
             list ?: emptyList()
         } catch (e: Exception) {
-            Log.e("SettingsManager", "Load topics failed: ${e.message}")
+            Log.e("SettingsManager", "Load topics failed", e)
             emptyList()
         }
     }
@@ -116,7 +116,10 @@ object SettingsManager {
             "first_setting" to true,
             "language" to "zh",
             "heartbeat_enabled" to true,
-            "send_message" to true
+            "send_message" to true,
+            "font_size" to "standard",
+            "border_color" to "#39FF14",
+            "text_color" to "#39FF14"
         )
         writeSettingsFile(defaultSettings)
         try {

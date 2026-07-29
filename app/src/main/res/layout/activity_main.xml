@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MQTT_Client_V1.0.0"
+                android:text="MQTT_Client_V1.0.1"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF" />

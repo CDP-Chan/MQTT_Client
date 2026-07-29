@@ -31,7 +31,6 @@ class TopicDetailActivity : BaseActivity() {
         binding.recyclerViewMessages.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewMessages.adapter = adapter
 
-        // 显示加载文字
         binding.tvLoading.visibility = View.VISIBLE
 
         binding.btnSettings.setOnClickListener {
@@ -55,7 +54,7 @@ class TopicDetailActivity : BaseActivity() {
                     val allMessages = MessageStorage.loadMessages().toMutableList()
                     allMessages.removeAll { it.topic == topicName }
                     MessageStorage.saveMessages(allMessages)
-                    adapter.setMessages(emptyList())
+                    adapter.submitList(emptyList())  // 替换 setMessages
                     Toast.makeText(this, R.string.delete_success, Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton(R.string.cancel, null)
@@ -85,7 +84,7 @@ class TopicDetailActivity : BaseActivity() {
         refreshRunnable = object : Runnable {
             override fun run() {
                 val messages = MessageStorage.getMessagesForTopic(topicName)
-                adapter.setMessages(messages)
+                adapter.submitList(messages)  // 替换 setMessages
                 if (isLoading) {
                     binding.tvLoading.visibility = View.GONE
                     isLoading = false
@@ -93,7 +92,7 @@ class TopicDetailActivity : BaseActivity() {
                 handler.postDelayed(this, 2000)
             }
         }
-        handler.postDelayed(refreshRunnable!!, 500) // 稍延迟以显示加载文字
+        handler.postDelayed(refreshRunnable!!, 500)
     }
 
     override fun onDestroy() {

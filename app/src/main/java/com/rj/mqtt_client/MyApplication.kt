@@ -16,9 +16,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-
         try {
-            SettingsManager.init()   // 无参数初始化
+            SettingsManager.init()
         } catch (e: Exception) {
             Log.e("MyApp", "SettingsManager init failed", e)
         }

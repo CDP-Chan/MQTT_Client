@@ -2,9 +2,13 @@ package com.rj.mqtt_client
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +20,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rj.mqtt_client.databinding.ActivityMainBinding
@@ -36,6 +39,14 @@ class MainActivity : BaseActivity() {
                 requestBatteryOptimization()
             }
         }
+
+    private val connectionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == MqttMonitorService.ACTION_CONNECTION_SUCCESS) {
+                showGreenSnackbar(getString(R.string.mqtt_connected_toast))
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,19 +96,10 @@ class MainActivity : BaseActivity() {
         binding.btnDebug.setOnClickListener { startActivity(Intent(this, DebugActivity::class.java)) }
 
         binding.btnConnectMqtt.setOnClickListener {
-            val message = if (MqttMonitorService.isAnyConnected) {
-                getString(R.string.mqtt_connected_toast)
+            if (MqttMonitorService.isAnyConnected) {
+                showGreenSnackbar(getString(R.string.mqtt_connected_toast))
             } else {
-                getString(R.string.mqtt_connecting_toast)
-            }
-
-            val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
-            snackbar.view.background = ResourcesCompat.getDrawable(resources, R.drawable.snackbar_bg, theme)
-            val textView = snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-            textView.setTextColor(Color.WHITE)
-            snackbar.show()
-
-            if (!MqttMonitorService.isAnyConnected) {
+                showGreenSnackbar(getString(R.string.mqtt_connecting_toast))
                 val intent = Intent(this, MqttMonitorService::class.java).apply {
                     action = MqttMonitorService.ACTION_RELOAD_TOPICS
                 }
@@ -111,6 +113,43 @@ class MainActivity : BaseActivity() {
         } catch (e: Exception) {
             Toast.makeText(this, R.string.service_failed, Toast.LENGTH_SHORT).show()
         }
+
+        // 注册广播，根据 API 版本选择合适的方式
+        val filter = IntentFilter(MqttMonitorService.ACTION_CONNECTION_SUCCESS)
+        @SuppressLint("UnspecifiedRegisterReceiverFlag")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(connectionReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(connectionReceiver, filter)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            unregisterReceiver(connectionReceiver)
+        } catch (e: Exception) {
+            // 忽略未注册异常
+        }
+    }
+
+    private fun showGreenSnackbar(message: String) {
+        val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+        val borderColor = parseColorSafely(SettingsManager.getBorderColor())
+        val background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            setColor(Color.parseColor("#2A2A2A"))
+            setStroke(dpToPx(2), borderColor)
+            cornerRadius = dpToPx(8).toFloat()
+        }
+        snackbar.view.background = background
+        val textView = snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView.setTextColor(Color.WHITE)
+        snackbar.show()
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
     }
 
     private fun requestPermissions() {

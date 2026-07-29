@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/personalization_settings"
+            android:textColor="#39FF14"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 字体大小 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/font_size"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupFontSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
+
+            <RadioButton
+                android:id="@+id/radioFontSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/font_small"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#39FF14"
+                android:layout_marginBottom="4dp"/>
+
+            <RadioButton
+                android:id="@+id/radioFontStandard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/font_standard"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#39FF14"
+                android:layout_marginBottom="4dp"/>
+
+            <RadioButton
+                android:id="@+id/radioFontLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/font_large"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#39FF14"/>
+        </RadioGroup>
+
+        <!-- 边框颜色标题和预览块 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/border_color"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+            <View
+                android:id="@+id/previewBorderColor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="#39FF14" />
+        </LinearLayout>
+
+        <!-- 边框 R -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="R"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+            <SeekBar
+                android:id="@+id/seekBarBorderR"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="57" />
+            <TextView
+                android:id="@+id/tvBorderRValue"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="57"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- 边框 G -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="G"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+            <SeekBar
+                android:id="@+id/seekBarBorderG"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="255" />
+            <TextView
+                android:id="@+id/tvBorderGValue"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="255"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- 边框 B -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="B"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+            <SeekBar
+                android:id="@+id/seekBarBorderB"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="20" />
+            <TextView
+                android:id="@+id/tvBorderBValue"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- 文字颜色标题和预览块 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/text_color"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+            <View
+                android:id="@+id/previewTextColor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="#39FF14" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_color_note"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 文字 R -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="R"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+            <SeekBar
+                android:id="@+id/seekBarTextR"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="57" />
+            <TextView
+                android:id="@+id/tvTextRValue"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="57"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- 文字 G -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="G"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+            <SeekBar
+                android:id="@+id/seekBarTextG"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="255" />
+            <TextView
+                android:id="@+id/tvTextGValue"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="255"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <!-- 文字 B -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="B"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+            <SeekBar
+                android:id="@+id/seekBarTextB"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="20" />
+            <TextView
+                android:id="@+id/tvTextBValue"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:gravity="end" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSavePersonalization"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:textSize="14sp"
+            android:textColor="#39FF14"
+            app:strokeColor="#39FF14" />
+    </LinearLayout>
+</ScrollView>
