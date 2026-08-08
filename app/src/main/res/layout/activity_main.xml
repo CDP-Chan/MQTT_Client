@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#121212">
+    >
 
     <!-- 标题栏 -->
     <LinearLayout
@@ -21,9 +21,9 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MQTT_Client_V1.0.1"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF" />
@@ -34,8 +34,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
                 android:textColor="#BBBBBB"
+                android:tag="comment"
                 android:layout_marginTop="4dp"
-                android:text="启动时间: ----/--/-- --:--:--" />
+                android:text="@string/start_time_placeholder" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -55,7 +56,8 @@
             android:layout_height="36dp"
             android:src="@drawable/ic_settings"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="#39FF14" />
+            android:contentDescription="@string/settings"
+            app:tint="#39FF14" />
     </LinearLayout>
 
     <!-- 按钮行：三个等宽按钮，恢复原字号 -->

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
@@ -15,7 +16,7 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Topic Name"
+            tools:text="Topic Name"
             android:textColor="#FFFFFF"
             android:textSize="16sp"/>
 
@@ -23,7 +24,8 @@
             android:id="@+id/tvUrl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="url"
+            android:tag="comment"
+            tools:text="url"
             android:textColor="#BBBBBB"
             android:textSize="12sp"/>
     </LinearLayout>
@@ -34,5 +36,6 @@
         android:layout_height="36dp"
         android:layout_gravity="end|center_vertical"
         android:src="@drawable/ic_delete"
+        android:contentDescription="@string/delete_topic_title"
         android:background="?attr/selectableItemBackgroundBorderless"/>
 </FrameLayout>

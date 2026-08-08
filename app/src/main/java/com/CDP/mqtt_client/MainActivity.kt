@@ -1,0 +1,226 @@
+package com.CDP.mqtt_client
+
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.Environment
+import android.os.PowerManager
+import android.provider.Settings
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.CDP.mqtt_client.databinding.ActivityMainBinding
+import java.text.SimpleDateFormat
+import java.util.*
+
+class MainActivity : BaseActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var topicAdapter: TopicAdapter
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                requestBatteryOptimization()
+            } else {
+                Toast.makeText(this, R.string.notify_reject, Toast.LENGTH_LONG).show()
+                requestBatteryOptimization()
+            }
+        }
+
+    private val connectionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == MqttMonitorService.ACTION_CONNECTION_SUCCESS) {
+                showGreenSnackbar(getString(R.string.mqtt_connected_toast))
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val startTime = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(Date())
+        binding.tvStartTime.text = getString(R.string.start_time, startTime)
+        // 版本号动态读取，避免在布局中写死
+        binding.tvVersion.text = getString(R.string.app_version_title, BuildConfig.VERSION_NAME)
+
+        binding.btnHelp.setOnClickListener { startActivity(Intent(this, HelpActivity::class.java)) }
+        binding.btnSettings.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
+
+        topicAdapter = TopicAdapter(
+            onItemClick = { config ->
+                val intent = Intent(this, TopicDetailActivity::class.java).apply {
+                    putExtra("topic", config.topic)
+                    putExtra("name", config.name)
+                    putExtra("url", config.url)
+                    putExtra("username", config.username)
+                    putExtra("password", config.password)
+                    putExtra("notify", config.notifyLockScreen)
+                }
+                startActivity(intent)
+            },
+            onDeleteClick = { config ->
+                showThemedDialog(
+                    title = getString(R.string.delete_topic_title),
+                    message = getString(R.string.delete_topic_msg, config.name),
+                    positiveText = getString(R.string.ok),
+                    negativeText = getString(R.string.cancel),
+                    onPositive = {
+                        val topics = SettingsManager.loadTopics().toMutableList()
+                        topics.removeAll { it.topic == config.topic }
+                        SettingsManager.saveTopics(topics)
+                        topicAdapter.setItems(topics)
+                        // 通知服务重载主题，断开已删除主题的连接
+                        startService(Intent(this, MqttMonitorService::class.java).apply {
+                            action = MqttMonitorService.ACTION_RELOAD_TOPICS
+                        })
+                        Toast.makeText(this, R.string.delete_success, Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        )
+
+        binding.recyclerViewTopics.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewTopics.adapter = topicAdapter
+
+        requestPermissions()
+
+        binding.btnAddTopic.setOnClickListener { startActivity(Intent(this, AddTopicActivity::class.java)) }
+        binding.btnDebug.setOnClickListener { startActivity(Intent(this, DebugActivity::class.java)) }
+
+        binding.btnConnectMqtt.setOnClickListener {
+            if (SettingsManager.loadTopics().isEmpty()) {
+                // 没有主题时无法建立连接，提示用户先添加主题
+                showGreenSnackbar(getString(R.string.mqtt_no_topics_added))
+            } else if (MqttMonitorService.isAnyConnected) {
+                showGreenSnackbar(getString(R.string.mqtt_connected_toast))
+            } else {
+                showGreenSnackbar(getString(R.string.mqtt_connecting_toast))
+                val intent = Intent(this, MqttMonitorService::class.java).apply {
+                    action = MqttMonitorService.ACTION_RELOAD_TOPICS
+                }
+                startService(intent)
+            }
+        }
+
+        try {
+            startService(Intent(this, MqttMonitorService::class.java))
+            Toast.makeText(this, R.string.service_started, Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, R.string.service_failed, Toast.LENGTH_SHORT).show()
+        }
+
+        // 注册广播，根据 API 版本选择合适的方式
+        val filter = IntentFilter(MqttMonitorService.ACTION_CONNECTION_SUCCESS)
+        @SuppressLint("UnspecifiedRegisterReceiverFlag")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(connectionReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(connectionReceiver, filter)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            unregisterReceiver(connectionReceiver)
+        } catch (e: Exception) {
+            // 忽略未注册异常
+        }
+    }
+
+    private fun showGreenSnackbar(message: String) {
+        val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT)
+        val borderColor = parseColorSafely(SettingsManager.getBorderColor())
+        val textColor = parseColorSafely(SettingsManager.getTextColor())
+        val background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            setColor(Color.parseColor("#2A2A2A"))
+            setStroke(dpToPx(2), borderColor)
+            cornerRadius = dpToPx(8).toFloat()
+        }
+        snackbar.view.background = background
+        val textView = snackbar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView.setTextColor(textColor)
+        snackbar.show()
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    private fun requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                return
+            }
+        }
+        requestBatteryOptimization()
+    }
+
+    @SuppressLint("BatteryLife")
+    private fun requestBatteryOptimization() {
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            try {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply { data = Uri.parse("package:$packageName") }
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, R.string.battery_opt_fail, Toast.LENGTH_SHORT).show()
+            }
+        }
+        checkAndRequestStoragePermission()
+    }
+
+    private fun checkAndRequestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                showThemedDialog(
+                    title = getString(R.string.permission_storage_title),
+                    message = getString(R.string.permission_storage_msg),
+                    positiveText = getString(R.string.go_settings),
+                    negativeText = getString(R.string.later),
+                    onPositive = {
+                        try { startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)) }
+                        catch (e: Exception) { Toast.makeText(this, R.string.goto_settings_failed, Toast.LENGTH_SHORT).show() }
+                    }
+                )
+            } else {
+                loadTopicsAndSettings()
+            }
+        } else {
+            loadTopicsAndSettings()
+        }
+    }
+
+    private fun loadTopicsAndSettings() {
+        try {
+            // 拿到存储权限后，把首次启动缓存在内部 data 的设置同步到外部设置文件
+            SettingsManager.flushPendingSettings()
+            topicAdapter.setItems(SettingsManager.loadTopics())
+        } catch (e: Exception) {
+            // 加载失败时静默忽略，用户可通过返回主界面重新触发加载
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager()) {
+            loadTopicsAndSettings()
+        }
+    }
+}

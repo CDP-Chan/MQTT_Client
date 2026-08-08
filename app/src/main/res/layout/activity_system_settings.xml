@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:text="@string/system_settings"
             android:textColor="#39FF14"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:layout_marginBottom="24dp" />
 
@@ -33,7 +33,7 @@
                 android:layout_weight="1"
                 android:text="@string/heartbeat_switch"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchHeartbeat"
@@ -47,7 +47,8 @@
             android:layout_height="wrap_content"
             android:text="@string/heartbeat_hint"
             android:textColor="#BBBBBB"
-            android:textSize="13sp"
+            android:tag="comment"
+            android:textSize="15sp"
             android:layout_marginBottom="24dp"/>
 
         <LinearLayout
@@ -63,7 +64,7 @@
                 android:layout_weight="1"
                 android:text="@string/send_message_switch"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchSendMessage"
@@ -77,7 +78,8 @@
             android:layout_height="wrap_content"
             android:text="@string/send_message_hint"
             android:textColor="#BBBBBB"
-            android:textSize="13sp"
+            android:tag="comment"
+            android:textSize="15sp"
             android:layout_marginBottom="32dp"/>
 
         <com.google.android.material.button.MaterialButton
@@ -86,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/factory_reset_title"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#FF0000"
             app:strokeColor="#FF0000"/>
     </LinearLayout>

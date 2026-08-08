@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#121212">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,14 +19,15 @@
             android:layout_height="36dp"
             android:src="@drawable/ic_settings"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="#39FF14"/>
+            android:contentDescription="@string/settings"
+            app:tint="#39FF14"/>
 
         <TextView
             android:id="@+id/tvTopicName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Topic"
+            android:text="@string/topic_name"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:layout_marginStart="8dp"
@@ -38,7 +39,7 @@
             android:layout_height="36dp"
             android:src="@drawable/ic_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="#39FF14"
+            app:tint="#39FF14"
             android:contentDescription="@string/delete_all_messages_title" />
     </LinearLayout>
 
@@ -59,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/loading"
+            android:tag="comment"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:visibility="gone"/>
@@ -77,6 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/msg_empty"
+            android:inputType="text"
+            android:importantForAutofill="no"
             android:textColor="#FFFFFF"
             android:background="#222222"
             android:padding="8dp"/>

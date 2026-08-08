@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#121212">
+    >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -12,14 +12,54 @@
         android:layout_weight="1"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvHelpContent"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp"
-            android:lineSpacingExtra="4dp"
-            android:text="@string/help_content" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvHelpIntro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="comment"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/help_intro" />
+
+            <TextView
+                android:id="@+id/tvHelpFaqTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="comment"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:text="@string/help_faq_title" />
+
+            <TextView
+                android:id="@+id/tvHelpContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="fixed"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/help_faq_content" />
+
+            <TextView
+                android:id="@+id/tvHelpContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="comment"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/help_contact" />
+        </LinearLayout>
     </ScrollView>
 
     <com.google.android.material.button.MaterialButton

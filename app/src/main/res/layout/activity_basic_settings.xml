@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/language_label"
+            android:tag="comment"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:layout_marginBottom="12dp" />
@@ -39,7 +40,7 @@
                 android:id="@+id/radioChinese"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="中文"
+                android:text="@string/language_chinese"
                 android:textColor="#FFFFFF"
                 android:buttonTint="#39FF14"
                 android:layout_marginEnd="24dp"/>
@@ -48,7 +49,7 @@
                 android:id="@+id/radioEnglish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="English"
+                android:text="@string/language_english"
                 android:textColor="#FFFFFF"
                 android:buttonTint="#39FF14"/>
         </RadioGroup>
