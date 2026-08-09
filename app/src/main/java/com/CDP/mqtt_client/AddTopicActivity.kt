@@ -1,31 +1,16 @@
 package com.CDP.mqtt_client
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 
 class AddTopicActivity : BaseActivity() {
-    private var pendingSave = false
-
-    private val requestWritePermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (granted) {
-                performSave()
-            } else {
-                pendingSave = false
-                Toast.makeText(this, R.string.storage_permission_denied, Toast.LENGTH_LONG).show()
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +40,7 @@ class AddTopicActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
-            // 没有写入权限时先申请；用户不同意则拒绝添加主题
-            if (!hasStorageWritePermission()) {
-                requestStoragePermission()
-                return@setOnClickListener
-            }
-
+            // 数据保存在应用内部 data，无需申请任何存储权限
             performSave()
         }
     }
@@ -98,53 +78,6 @@ class AddTopicActivity : BaseActivity() {
             action = MqttMonitorService.ACTION_RELOAD_TOPICS
         })
         finish()
-    }
-
-    private fun requestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            pendingSave = true
-            val dialog = showThemedDialog(
-                title = getString(R.string.permission_storage_title),
-                message = getString(R.string.storage_permission_msg),
-                positiveText = getString(R.string.go_settings),
-                negativeText = getString(R.string.cancel),
-                onPositive = {
-                    try {
-                        startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
-                    } catch (e: Exception) {
-                        Toast.makeText(this, R.string.goto_settings_failed, Toast.LENGTH_SHORT).show()
-                    }
-                },
-                onNegative = {
-                    pendingSave = false
-                    Toast.makeText(this, R.string.storage_permission_denied, Toast.LENGTH_LONG).show()
-                }
-            )
-            dialog.setOnCancelListener { pendingSave = false }
-        } else {
-            requestWritePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (pendingSave && hasStorageWritePermission()) {
-            pendingSave = false
-            performSave()
-        } else if (pendingSave) {
-            pendingSave = false
-            Toast.makeText(this, R.string.storage_permission_denied, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean("pendingSave", pendingSave)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        pendingSave = savedInstanceState.getBoolean("pendingSave", false)
     }
 
     private fun hideKeyboard() {

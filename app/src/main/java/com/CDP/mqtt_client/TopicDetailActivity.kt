@@ -55,7 +55,7 @@ class TopicDetailActivity : BaseActivity() {
                     val allMessages = MessageStorage.loadMessages().toMutableList()
                     allMessages.removeAll { it.topic == topicName }
                     MessageStorage.saveMessages(allMessages)
-                    adapter.submitList(emptyList())  // 替换 setMessages
+                    adapter.submitList(emptyList())
                     Toast.makeText(this, R.string.delete_success, Toast.LENGTH_SHORT).show()
                 }
             )

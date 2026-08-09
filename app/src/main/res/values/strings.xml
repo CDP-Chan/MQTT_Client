@@ -14,12 +14,6 @@
     <string name="delete_topic_msg">确定要删除 %s 吗？</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
-    <string name="permission_storage_title">需要存储权限</string>
-    <string name="permission_storage_msg">请开启“所有文件访问权限”以保存数据。</string>
-    <string name="go_settings">去设置</string>
-    <string name="later">稍后</string>
-    <string name="storage_permission_msg">保存主题需要存储写入权限，请授权后重试。</string>
-    <string name="storage_permission_denied">未获得存储权限，无法保存主题</string>
     <string name="notify_reject">通知权限被拒绝</string>
     <string name="battery_opt_fail">无法请求电池优化豁免</string>
     <string name="service_started">监控服务已开启</string>
@@ -31,6 +25,8 @@
     <string name="username_password_required">用户名和密码为必填项</string>
     <string name="settings_saved">设置已保存</string>
     <string name="delete_success">已删除</string>
+    <string name="delete_all_messages_title">删除消息</string>
+    <string name="delete_all_messages_msg">确定要删除所有消息吗？</string>
     <string name="log_clear_title">清空日志</string>
     <string name="log_clear_msg">确定要清空所有调试日志吗？</string>
     <string name="no_log">暂无日志</string>
@@ -47,8 +43,6 @@
     <string name="topic_name">Topic</string>
     <string name="settings">设置</string>
     <string name="send_message">发送</string>
-    <string name="delete_all_messages_title">删除消息</string>
-    <string name="delete_all_messages_msg">确定要删除所有消息吗？</string>
     <string name="factory_reset_title">恢复出厂设置</string>
     <string name="factory_reset_msg">确定要删除所有数据并重置应用吗？</string>
     <string name="heartbeat_switch">心跳包</string>
@@ -62,7 +56,6 @@
     <string name="help_faq_content">1. 如何添加主题（Topic）？\n在“添加主题”界面，输入服务器的 URL（推荐使用 DFRobot 的服务器进行测试），填写用户名和密码，然后添加需要监控的主题即可。\n\n2. 端口 1883 是什么？\n1883 是 MQTT 协议的默认端口号。你可以根据监控的实际端口进行修改。\n\n3. “消息通知”选项有什么作用？\n勾选后，即使手机息屏，你仍能收到新消息通知。搭配“心跳包”功能效果更好。\n\n4. “心跳包”功能有什么用？\n开启后，应用会定期发送保活数据包，能有效降低被系统冻结后台的风险，提高消息接收的及时性，但会增加一些电量消耗。\n\n5. 为什么我手机亮屏时仍收不到消息？\n请前往手机“设置”，关闭省电模式，或在应用启动管理中选择“手动管理”，并允许“后台活动”。\n\n6. 为什么消息的图标是安卓图标？\n这是系统缓存引起的bug，重启手机即可。\n\n7. 为什么我收不到MQTT消息？\n这款应用目前只能接收TCP和SSL协议的消息，计划将在后续推出支持WS和WSS协议的消息。\n\n8. 为什么我添加了topic而无法显示？\n请尝试将系统字体大小调整为标准大小，或在应用中设置文字大小。</string>
     <string name="help_contact">官方联系邮箱：CDP_Chan@126.com\n\n在B站搜索“CDP_Chan”，关注我，获取更多更新消息</string>
     <string name="default_topic_name">MQTT</string>
-    <string name="goto_settings_failed">无法打开设置</string>
     <string name="notification_prefix">新消息</string>
     <string name="mqtt_service_title">MQTT 服务</string>
     <string name="mqtt_connecting">正在连接…</string>

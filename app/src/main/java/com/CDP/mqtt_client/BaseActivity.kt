@@ -1,14 +1,10 @@
 package com.CDP.mqtt_client
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +17,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import java.util.Locale
 
@@ -104,18 +99,6 @@ open class BaseActivity : AppCompatActivity() {
             Color.parseColor(color)
         } catch (e: Exception) {
             Color.parseColor("#39FF14")
-        }
-    }
-
-    /** 检查外部存储写入权限：API 30+ 需要“所有文件访问”，API 26-29 需要 WRITE_EXTERNAL_STORAGE。 */
-    protected fun hasStorageWritePermission(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Environment.isExternalStorageManager()
-        } else {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 

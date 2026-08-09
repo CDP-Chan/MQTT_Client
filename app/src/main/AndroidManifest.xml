@@ -9,11 +9,12 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 以下两个权限仅用于旧版本（外部存储）数据的一次性迁移，运行时不再申请 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-    tools:ignore="ScopedStorage" />
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
 
     <application

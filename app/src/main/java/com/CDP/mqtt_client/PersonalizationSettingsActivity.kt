@@ -1,6 +1,5 @@
 package com.CDP.mqtt_client
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.SeekBar
@@ -121,12 +120,8 @@ class PersonalizationSettingsActivity : BaseActivity() {
             SettingsManager.setCommentColor(commentColorStr)
             Toast.makeText(this, R.string.settings_saved, Toast.LENGTH_SHORT).show()
 
-            // 彻底重启应用
-            val intent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            startActivity(intent)
-            finish()
+            // 仅刷新当前界面以应用新字体与颜色，不重启应用、不清除任何数据
+            recreate()
         }
     }
 

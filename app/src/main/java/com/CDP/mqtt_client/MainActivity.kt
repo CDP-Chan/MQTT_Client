@@ -12,7 +12,6 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.PowerManager
 import android.provider.Settings
 import android.widget.TextView
@@ -183,34 +182,10 @@ class MainActivity : BaseActivity() {
                 Toast.makeText(this, R.string.battery_opt_fail, Toast.LENGTH_SHORT).show()
             }
         }
-        checkAndRequestStoragePermission()
-    }
-
-    private fun checkAndRequestStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                showThemedDialog(
-                    title = getString(R.string.permission_storage_title),
-                    message = getString(R.string.permission_storage_msg),
-                    positiveText = getString(R.string.go_settings),
-                    negativeText = getString(R.string.later),
-                    onPositive = {
-                        try { startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)) }
-                        catch (e: Exception) { Toast.makeText(this, R.string.goto_settings_failed, Toast.LENGTH_SHORT).show() }
-                    }
-                )
-            } else {
-                loadTopicsAndSettings()
-            }
-        } else {
-            loadTopicsAndSettings()
-        }
     }
 
     private fun loadTopicsAndSettings() {
         try {
-            // 拿到存储权限后，把首次启动缓存在内部 data 的设置同步到外部设置文件
-            SettingsManager.flushPendingSettings()
             topicAdapter.setItems(SettingsManager.loadTopics())
         } catch (e: Exception) {
             // 加载失败时静默忽略，用户可通过返回主界面重新触发加载
@@ -219,8 +194,6 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager()) {
-            loadTopicsAndSettings()
-        }
+        loadTopicsAndSettings()
     }
 }

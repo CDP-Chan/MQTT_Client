@@ -2,9 +2,7 @@ package com.CDP.mqtt_client
 
 import android.app.Application
 import android.content.res.Configuration
-import android.os.Environment
 import android.util.Log
-import java.io.File
 import java.util.Locale
 
 class MyApplication : Application() {
@@ -20,13 +18,6 @@ class MyApplication : Application() {
             SettingsManager.init()
         } catch (e: Exception) {
             Log.e("MyApp", "SettingsManager init failed", e)
-        }
-
-        try {
-            val dir = File(Environment.getExternalStorageDirectory(), "Mqtt")
-            if (!dir.exists()) dir.mkdirs()
-        } catch (e: Exception) {
-            Log.e("MyApp", "Storage dir creation failed", e)
         }
 
         applySavedLanguage()

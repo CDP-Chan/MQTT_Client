@@ -6,6 +6,26 @@ All notable changes to this project are documented in this file.
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 Based on [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/lang/zh-CN/).
 
+## [V1.0.2-Patch] - 2026-08-09
+
+### 修复 / Fixes
+
+- 修复了某些机型不支持外部存储写入与读取的bug，数据存储地址改为应用内部 data（`filesDir/Mqtt`），不再依赖外部存储；升级安装时会自动把旧的外部存储数据一次性迁移到内部存储。
+
+  Fixed the bug where some device models do not support external storage read/write. Data is now stored in the app's internal data directory (`filesDir/Mqtt`) and no longer depends on external storage; on upgrade, data from the old external location is migrated into internal storage automatically.
+- 以后将不会发布依赖外部存储的版本。
+
+  Future releases will no longer depend on external storage.
+
+### 变更 / Changes
+
+- 更改字体/颜色后仅刷新当前界面，不再重启应用，不会删除任何数据。
+
+  Changing font or colors now only refreshes the current screen instead of restarting the app; no data is deleted.
+- 客户端删除功能全部保留（删除主题、删除消息、清空日志）；服务端不主动清空数据，仅在“恢复出厂设置”时执行完整恢复。
+
+  All client-side delete features are retained (delete topic, delete messages, clear log); the service never proactively clears data — a full reset happens only via “Factory Reset”.
+
 ## [1.0.2] - 2026-08-08
 
 ### 界面优化 / UI Improvements
